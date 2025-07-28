@@ -1,0 +1,18 @@
+services:
+  redis:
+    container_name: redis_dev_test
+    image: redis:8.0-M02-alpine
+    restart: always
+    ports:
+      - "6333:6379"
+
+  dblocal:
+    container_name: dblocal_dev_test
+    image: postgres:14.2-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5444:5432"

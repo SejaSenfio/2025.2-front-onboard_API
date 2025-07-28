@@ -1,0 +1,48 @@
+services:
+  dblocal:
+    container_name: dblocal-challenge
+    image: postgres:14.2-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: &dbname postgres
+      POSTGRES_PASSWORD: &dbpass postgres
+      POSTGRES_USER: &dbuser postgres
+
+  app:
+    build: .
+    container_name: &appname challenge 
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8000/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 7s      
+    depends_on:
+      - dblocal
+    environment:
+      APP_RUN_PORT: &appport 8000
+      DB_HOST: dblocal
+      DB_PORT: 5432
+      DB_NAME: *dbname
+      DB_USER: *dbuser
+      DB_PASSWORD: *dbpass
+      LOG_LEVEL: DEBUG
+      DEBUG: true
+      RUN_MIGRATIONS: true
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: admin@senfio.com
+      DJANGO_SUPERUSER_PASSWORD: Admin4dm1n
+
+  nginx:
+    build: ./infra/nginx
+    container_name: nginx-challenge
+    restart: always
+    depends_on:
+      app:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    environment:
+      APPSERVER: *appname
+      APP_RUN_PORT: *appport

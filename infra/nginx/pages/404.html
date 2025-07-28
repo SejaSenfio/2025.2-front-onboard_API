@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="icon" type="image/svg+xml" href="/app-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700;800&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="/NotFound/styles.css" media="screen" />
+
+    <title>App Senfio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            font-family: "Open sans", sans-serif;
+            vertical-align: baseline;
+        }
+
+        body {
+            background: #203075;
+            height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            text-shadow: 0 30px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            text-align: center;
+            z-index: 5;
+        }
+
+        h2 {
+            font-size: 15rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 2rem;
+        }
+
+        .bubble {
+            background: linear-gradient(#d92128, #ffaaae);
+            border-radius: 50%;
+            box-shadow: 0 30px 15px rgba(#000, 0.15);
+            position: absolute;
+
+            &:before,
+            &:after {
+                content: "";
+                background: linear-gradient(#d92128, #ffaaae);
+                border-radius: 50%;
+                box-shadow: 0 30px 15px rgba(#000, 0.15);
+                position: absolute;
+            }
+
+            &:nth-child(1) {
+                top: 15vh;
+                left: 15vw;
+                height: 22vmin;
+                width: 22vmin;
+
+                &:before {
+                    width: 13vmin;
+                    height: 13vmin;
+                    bottom: -25vh;
+                    right: -10vmin;
+                }
+            }
+
+            &:nth-child(2) {
+                top: 20vh;
+                left: 38vw;
+                height: 10vmin;
+                width: 10vmin;
+
+                &:before {
+                    width: 5vmin;
+                    height: 5vmin;
+                    bottom: -10vh;
+                    left: -8vmin;
+                }
+            }
+
+            &:nth-child(3) {
+                top: 12vh;
+                right: 30vw;
+                height: 13vmin;
+                width: 13vmin;
+
+                &:before {
+                    width: 3vmin;
+                    height: 3vmin;
+                    bottom: -15vh;
+                    left: -18vmin;
+                    z-index: 6;
+                }
+            }
+
+            &:nth-child(4) {
+                top: 25vh;
+                right: 18vw;
+                height: 18vmin;
+                width: 18vmin;
+
+                &:before {
+                    width: 7vmin;
+                    height: 7vmin;
+                    bottom: -10vmin;
+                    left: -15vmin;
+                }
+            }
+
+            &:nth-child(5) {
+                top: 60vh;
+                right: 18vw;
+                height: 28vmin;
+                width: 28vmin;
+
+                &:before {
+                    width: 10vmin;
+                    height: 10vmin;
+                    bottom: 5vmin;
+                    left: -25vmin;
+                }
+            }
+
+            &:nth-child(6) {
+                top: 10vh;
+                left: 6vw;
+                height: 28vmin;
+                width: 28vmin;
+
+                &:before {
+                    width: 10vmin;
+                    height: 10vmin;
+                    left: 15vw;
+                    top: 40vh;
+                }
+            }
+        }
+
+        button {
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+
+            background: linear-gradient(#d92128, #d92128);
+            color: #ffffff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h2>404</h2>
+        <p>Parece que você está perdido...</p>
+    </main>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+</body>
+
+</html>

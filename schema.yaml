@@ -1,0 +1,3063 @@
+openapi: 3.0.3
+info:
+  title: API Onboard - Backend
+  version: 0.1.0-alpha.0
+  description: "\n    Documentação de endpoints do projeto '[Challenge] - Backend'\
+    \ da Senfio.\n\n    ==> Parâmetros gerais de consulta:\n    - `page`: Página a\
+    \ ser retornada.\n    - `page_size`: Quantidade de itens por página.\n    - `ordering`:\
+    \ Campo a ser ordenado. (prefixo '-' para ordem decrescente)\n    - `search`:\
+    \ Campo a ser pesquisado. \n         Por padrão a pesquisa é feita com o operador\
+    \ \"icontains\" (case-insensitive e parcial). \n         Para pesquisas mais complexas:\
+    \ \n             -> Buscando num campo específico : `?search=field::value`.\n\
+    \            -> Buscando em vários campos específicos : `?search=field1::value1;field2::value2`.\n\
+    \            -> Buscando com operadores avançados: (&field__lookup=value) | (?search=field__lookup::value)\
+    \ \n                 Lookup         | Descrição\n                ---------------|--------------------------------\n\
+    \                exact          | Busca um valor exato (case-sensitive).\n   \
+    \             iexact         | Busca exata, mas case-insensitive.\n          \
+    \      contains       | Verifica se contém um valor (case-sensitive).\n      \
+    \          icontains      | Verifica se contém um valor (case-insensitive).\n\
+    \                startswith     | Começa com (case-sensitive).\n             \
+    \   istartswith    | Começa com (case-insensitive).\n                endswith\
+    \       | Termina com (case-sensitive).\n                iendswith      | Termina\
+    \ com (case-insensitive).\n                gt             | Maior que. | .filter(age__gt=18)\n\
+    \                gte            | Maior ou igual a.\n                lt      \
+    \       | Menor que.\n                lte            | Menor ou igual a.\n    "
+paths:
+  /api/v1/authentication/change-password:
+    patch:
+      operationId: change_password
+      description: Altera a senha do usuário autenticado.
+      summary: Alterar senha
+      tags:
+      - Auth/Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedChangePassword'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/authentication/login:
+    post:
+      operationId: login
+      description: Loga o usuário no sistema.
+      summary: Login
+      tags:
+      - Auth/Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/authentication/logout:
+    post:
+      operationId: logout
+      description: Desloga o usuário.
+      summary: Logout
+      tags:
+      - Auth/Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogout'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '205':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/authentication/me:
+    get:
+      operationId: me
+      description: Retorna os dados do usuário autenticado.
+      summary: Quem sou eu
+      tags:
+      - Auth/Users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/authentication/refresh:
+    post:
+      operationId: refresh_token
+      description: Atualiza o token de acesso.
+      summary: Atualizar token
+      tags:
+      - Auth/Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/authentication/register:
+    post:
+      operationId: register
+      description: Registra um novo usuário no sistema.
+      summary: Registrar usuário
+      tags:
+      - Auth/Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/authentication/users:
+    get:
+      operationId: list_users
+      description: Lista todos os usuários do sistema.
+      summary: Listar usuários
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+          minLength: 1
+        description: 'Termo de busca para os campos: [ email, team ]'
+      tags:
+      - Auth/Users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/changelog:
+    get:
+      operationId: get_changelog
+      description: Recupera o changelog do projeto.
+      summary: Changelog
+      tags:
+      - Changelog
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangelogResponse'
+              examples:
+                Changelog:
+                  value:
+                  - version: 0.2.0
+                    released: '2023-11-01'
+                    features:
+                    - Introduzida funcionalidade A.
+                    - Atualização da biblioteca B.
+                    bugfixes:
+                    - Resolvido bug C.
+                    - Aprimorado suporte a D.
+                  - version: 0.1.0
+                    released: '2023-10-01'
+                    features:
+                    - Adicionada nova funcionalidade X.
+                    - Melhorias na interface do usuário.
+                    bugfixes:
+                    - Corrigido erro Y.
+                    - Ajustado problema de desempenho Z.
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/coupons:
+    get:
+      operationId: list_coupons
+      description: Lista todos os cupons disponíveis.
+      summary: Listar Cupons
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Coupons
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedCouponList'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+    post:
+      operationId: create_coupon
+      description: Cria um novo cupom.
+      summary: Criar Cupom
+      tags:
+      - Coupons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/coupons/{id}:
+    get:
+      operationId: retrieve_update_delete_coupon
+      description: Obtém, atualiza ou remove um cupom específico.
+      summary: Detalhes do Cupom
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Coupons
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Coupon'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+    put:
+      operationId: update_coupon
+      description: Atualiza os detalhes de um cupom existente.
+      summary: Atualizar Cupom
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Coupons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Coupon'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+    patch:
+      operationId: partial_update_coupon
+      description: Atualiza parcialmente os detalhes de um cupom existente.
+      summary: Atualizar Parcialmente Cupom
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Coupons
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCoupon'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+    delete:
+      operationId: delete_coupon
+      description: Remove um cupom existente.
+      summary: Remover Cupom
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Coupons
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/coupons/balance:
+    get:
+      operationId: get_balance
+      description: Obtém o saldo de cupons disponíveis para o usuário autenticado.
+      summary: Saldo de Cupons
+      tags:
+      - Coupons
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coupon'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/coupons/recent-redemptions:
+    get:
+      operationId: recent_redemptions
+      description: Lista os últimos resgates feitos.
+      summary: Resgates Recentes
+      tags:
+      - Redemptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Redemption'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/coupons/redemptions:
+    get:
+      operationId: list_redemptions
+      description: Lista todos os resgates feitos pelo usuário autenticado.
+      summary: Listar Resgates
+      parameters:
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - Redemptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRedemptionList'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+    post:
+      operationId: create_redemption
+      description: Cria um novo resgate para o cupom especificado.
+      summary: Criar Resgate
+      tags:
+      - Redemptions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRedemption'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/coupons/redemptions/{id}:
+    get:
+      operationId: retrieve_delete_redemption
+      description: Obtém ou remove um resgate específico.
+      summary: Detalhes do Resgate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Redemptions
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Redemption'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+    delete:
+      operationId: delete_redemption
+      description: Remove um resgate específico.
+      summary: Remover Resgate
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Redemptions
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /api/v1/schema:
+    get:
+      operationId: api_v1_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /health:
+    get:
+      operationId: health_check
+      description: Check the health of the application.
+      summary: Health Check
+      tags:
+      - Health
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+  /version:
+    get:
+      operationId: version
+      description: Get the version of the application.
+      summary: Version
+      tags:
+      - Version
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Version'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: ''
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotAuthenticated:
+                  value:
+                    code: not_authenticated
+                    message: Usuário não autenticado.
+                  summary: not_authenticated
+          description: Usuário não autenticado.
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                PermissionDenied:
+                  value:
+                    code: permission_denied
+                    message: Permissão negada para o recurso solicitado.
+                  summary: permission_denied
+          description: Permissão negada para o recurso solicitado.
+        '404':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotFound:
+                  value:
+                    code: not_found
+                    message: Recurso procurado não encontrado.
+                  summary: not_found
+          description: Recurso procurado não encontrado.
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                Conflict:
+                  value:
+                    code: conflict
+                    message: Um conflito ocorreu durante a solicitação.
+                  summary: conflict
+          description: Um conflito ocorreu durante a solicitação.
+        '417':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ExpectationFailed:
+                  value:
+                    code: expectation_failed
+                    message: Expectativa não atendida.
+                  summary: expectation_failed
+          description: Expectativa não atendida.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                ServerError:
+                  value:
+                    code: server_error
+                    message: Erro interno do servidor.
+                  summary: server_error
+          description: Erro interno do servidor.
+        '501':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+              examples:
+                NotImplemented:
+                  value:
+                    code: not_implemented
+                    message: Recurso solicitado ainda não foi implementado.
+                  summary: not_implemented
+          description: Recurso solicitado ainda não foi implementado.
+components:
+  schemas:
+    ApiError:
+      type: object
+      description: Serializer para erros de API.
+      properties:
+        code:
+          type: string
+          description: Código do erro
+        message:
+          type: string
+          description: Mensagem de erro
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: Detalhes do erro
+      required:
+      - code
+      - message
+    ChangelogResponse:
+      type: object
+      properties:
+        version:
+          type: string
+        released:
+          type: string
+          format: date
+        features:
+          type: array
+          items:
+            type: string
+        bugfixes:
+          type: array
+          items:
+            type: string
+      required:
+      - bugfixes
+      - features
+      - released
+      - version
+    Coupon:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          title: Código de resgate
+          maxLength: 50
+        description:
+          type: string
+          title: Descrição
+        max_redemptions:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          title: Número máximo de resgates
+        available:
+          type: boolean
+          title: Disponível
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Criado em
+      required:
+      - code
+      - created_at
+      - description
+      - id
+    CreateRedemption:
+      type: object
+      properties:
+        coupon:
+          type: integer
+          title: Cupom
+      required:
+      - coupon
+    GenericResponse:
+      type: object
+      description: Serializer genérico para respostas de API.
+      properties:
+        detail:
+          type: string
+          description: Mensagem de detalhe da resposta
+        status:
+          type: string
+          description: Status da resposta
+        data:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+          description: Dados adicionais da resposta
+      required:
+      - detail
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the application
+      required:
+      - status
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+    PaginatedCouponList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        total_pages:
+          type: integer
+          example: 4
+        current_page:
+          type: integer
+          example: 1
+        next_page:
+          type: integer
+          nullable: true
+          example: 2
+        previous_page:
+          type: integer
+          nullable: true
+          example: null
+        page_size:
+          type: integer
+          example: 25
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Coupon'
+    PaginatedRedemptionList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        total_pages:
+          type: integer
+          example: 4
+        current_page:
+          type: integer
+          example: 1
+        next_page:
+          type: integer
+          nullable: true
+          example: 2
+        previous_page:
+          type: integer
+          nullable: true
+          example: null
+        page_size:
+          type: integer
+          example: 25
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Redemption'
+    PaginatedUserList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        total_pages:
+          type: integer
+          example: 4
+        current_page:
+          type: integer
+          example: 1
+        next_page:
+          type: integer
+          nullable: true
+          example: 2
+        previous_page:
+          type: integer
+          nullable: true
+          example: null
+        page_size:
+          type: integer
+          example: 25
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    PatchedChangePassword:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+    PatchedCoupon:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        code:
+          type: string
+          title: Código de resgate
+          maxLength: 50
+        description:
+          type: string
+          title: Descrição
+        max_redemptions:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          title: Número máximo de resgates
+        available:
+          type: boolean
+          title: Disponível
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Criado em
+    Redemption:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        coupon:
+          allOf:
+          - $ref: '#/components/schemas/Coupon'
+          readOnly: true
+        redeemed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          title: Resgatado em
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
+          readOnly: true
+      required:
+      - coupon
+      - id
+      - redeemed_at
+      - user
+    Register:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        team:
+          allOf:
+          - $ref: '#/components/schemas/TeamEnum'
+          title: Equipe
+        works_since:
+          type: string
+          format: date
+          title: Data de entrada na empresa
+      required:
+      - email
+      - password
+      - works_since
+    TeamEnum:
+      enum:
+      - TECNOLOGIA
+      - MARKETING
+      - VENDAS
+      - FINANCEIRO
+      - RH
+      - ENGENHARIA
+      type: string
+      description: |-
+        * `TECNOLOGIA` - Tecnologia
+        * `MARKETING` - Marketing
+        * `VENDAS` - Vendas
+        * `FINANCEIRO` - Financeiro
+        * `RH` - Recursos Humanos
+        * `ENGENHARIA` - Engenharia
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - email
+      - password
+      - refresh
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+      required:
+      - access
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        team:
+          type: string
+          readOnly: true
+        works_since:
+          type: string
+          format: date
+          title: Data de entrada na empresa
+        is_active:
+          type: boolean
+          readOnly: true
+          title: Ativo
+        is_staff:
+          type: boolean
+          readOnly: true
+          title: Membro da equipe(Administrador)
+      required:
+      - email
+      - id
+      - is_active
+      - is_staff
+      - team
+      - works_since
+    UserLogout:
+      type: object
+      properties:
+        refresh:
+          type: string
+          description: Token de atualização
+      required:
+      - refresh
+    Version:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Version of the application
+      required:
+      - version
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

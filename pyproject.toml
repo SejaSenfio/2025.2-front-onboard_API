@@ -1,0 +1,124 @@
+[tool.poetry]
+name = "challenge-backend"
+version = "0.1.0"
+description = "Senfio"
+authors = ["Bruno Mariano <bruno.mariano@senfio.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.2.4"
+psycopg = {extras = ["binary", "pool"], version = "^3.2.9"}
+pydantic = {extras = ["email"], version = "2.11.7"}
+pydantic-settings = "^2.9.1"
+djangorestframework = "^3.16.0"
+django-extensions = "^4.1"
+django-cors-headers = "^4.7.0"
+django-model-utils = "^5.0.0"
+gunicorn = "^23.0.0"
+pytz = "^2025.2"
+djangorestframework-simplejwt = "^5.5.1"
+drf-spectacular = "^0.28.0"
+sentry-sdk = {extras = ["django"], version = "2.33.2"}
+opentelemetry-api = "^1.35.0"
+opentelemetry-sdk = "^1.35.0"
+factory-boy = "^3.3.3"
+requests = "^2.32.4"
+unidecode = "^1.4.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^25.1.0"
+ruff = "^0.12.5"
+isort = "^6.0.1"
+pytest = "^8.4.1"
+freezegun = "^1.5.3"
+pytest-django = "^4.11.1"
+pytest-cov = "^6.2.1"
+bandit = "^1.8.6"
+mkdocs = "^1.6.1"
+mkdocs-material = "^9.6.16"
+pytest-env = "^1.1.5"
+pytest-mock = "^3.14.0"
+mypy = "^1.17.0"
+types-requests = "^2.32.4.20250611"
+requests-mock = "^1.12.1"
+towncrier = "^24.8.0"
+pytest-xdist = "^3.8.0"
+rstr = "^3.2.2"
+
+
+[tool.ruff]###############>>>>>>> LINTER AND FORMATTER CONFIGS
+src = ["src/"]
+line-length = 100
+indent-width = 4
+exclude = [".venv",'src/config/settings/__init__.py']
+
+
+[tool.isort]
+profile = "black"
+skip = ["migrations"]
+
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+extend-exclude = '''
+/(
+  | migrations
+)/
+'''
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings"
+pythonpath = ["src/"]
+markers = [
+    "slow: marca para tests lentos por natureza.",
+    "smoke: marca para testes rápidos que verificam se o sistema está funcionando.",
+    "integration: marca para testes que verificam a integração entre diferentes partes do sistema.",
+    "mock_celery: marca para testes que usam mocks de celery.",
+    "flush_redis: marca para testes que limpam o redis antes e ao final do teste.",
+]
+testpaths = ["tests", "*_tests"]
+python_files = ["*_tests.py", "tests_*", "test_*"]
+python_classes = ["Test*", "*Tests"]
+python_functions = ["test_*"]
+filterwarnings = [
+    "always::DeprecationWarning"
+]
+
+[tool.pytest_env]
+DEBUG = true
+LOG_LEVEL = "DEBUG"
+
+[tool.bandit]
+exclude_dirs = ["tests", "migrations"]
+skips = ["B311"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "src/**/tests/*",
+    "src/**/migrations/*",
+    "src/**/tests.py"
+]
+
+[tool.mypy]
+python_version = "3.12"  # Versão do Python usada no projeto
+cache_dir = ".mypy_cache"  # Diretório onde o cache será armazenado
+incremental = true  # Habilita análises incrementais (padrão)
+plugins = ['pydantic.mypy']  # Lista de plugins do MyPy, caso necessário
+files = ["src"]  # Diretórios e arquivos a analisar
+exclude = ["tests","apidoc","migrations"]  # Excluir diretórios
+disallow_untyped_defs = true
+warn_unused_ignores = true  # Alerta se `# type: ignore` não é necessário
+warn_no_return = true  # Alerta se uma função sem retorno explícito pode não retornar nada
+warn_redundant_casts = true  # Alerta para casts desnecessários
+warn_unreachable = true  # Alerta sobre código inatingível
+implicit_reexport = false  # Erro ao reexportar símbolos de um módulo sem declaração explícita
+follow_imports = "silent"
+ignore_missing_imports=true
+
+[tool.towncrier]
+directory = "docs/changelogs.d"
+filename ="docs/CHANGELOG.md"

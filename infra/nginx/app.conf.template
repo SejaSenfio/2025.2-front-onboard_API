@@ -1,0 +1,46 @@
+# Configuração do servidor
+server {
+    listen 80;
+    # Definindo variáveis para reutilização
+    # diretório raiz do servidor
+    set ${DOLLAR}root_path /usr/share/nginx/html;
+
+    # diretório para arquivos estáticos do Django
+    set ${DOLLAR}static_path ${DOLLAR}root_path/static;
+
+    # diretório para páginas de erro
+    set ${DOLLAR}error_pages_path ${DOLLAR}root_path/static/pages/error;
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+        expires max;
+        alias ./favicon.ico;
+    }
+
+    # Configuração para arquivos estáticos
+    location /static/ {
+        alias ${DOLLAR}static_path/;
+    }
+
+    # Configuração para servir o aplicativo Django via Gunicorn
+    location / {
+        proxy_pass http://${APPSERVER}:${APP_RUN_PORT};
+        proxy_set_header Host ${DOLLAR}host;
+        proxy_set_header X-Real-IP ${DOLLAR}remote_addr;
+        proxy_set_header X-Forwarded-For ${DOLLAR}proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto ${DOLLAR}scheme;
+    }
+
+    # Configuração para páginas de erro personalizadas
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /50x.html;
+
+    location = /404.html {
+        alias ${DOLLAR}error_pages_path/404.html;
+    }
+
+    location = /50x.html {
+        alias ${DOLLAR}error_pages_path/50x.html;
+    }
+}
