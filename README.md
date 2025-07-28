@@ -18,12 +18,14 @@ Este é um sistema backend desenvolvido para gerenciar **cupons de desconto** e 
 ### 🎪 Modelos Principais
 
 #### 👤 User (Usuário)
+
 - **Email**: Identificação única do usuário
 - **Team**: Equipe do usuário (Tecnologia, Marketing, Vendas, etc.)
 - **Works Since**: Data de entrada na empresa
 - **Permissões**: Controle de acesso (staff/admin)
 
 #### 🎟️ Coupon (Cupom)
+
 - **Code**: Código único de resgate
 - **Description**: Descrição do cupom
 - **Max Redemptions**: Limite máximo de resgates
@@ -31,6 +33,7 @@ Este é um sistema backend desenvolvido para gerenciar **cupons de desconto** e 
 - **Validações**: Controle de limites e disponibilidade
 
 #### 🎁 Redemption (Resgate)
+
 - **User**: Usuário que realizou o resgate
 - **Coupon**: Cupom resgatado
 - **Redeemed At**: Data/hora do resgate
@@ -50,6 +53,7 @@ BLACKLIST_AFTER_ROTATION = True       # Blacklist de tokens antigos
 ```
 
 #### 🔑 Endpoints de Autenticação
+
 - `POST /api/v1/auth/login` - Login do usuário
 - `POST /api/v1/auth/refresh` - Renovação do token
 - `POST /api/v1/auth/logout` - Logout com blacklist do token
@@ -68,6 +72,7 @@ BLACKLIST_AFTER_ROTATION = True       # Blacklist de tokens antigos
 ### 🎟️ Sistema de Cupons
 
 #### 📋 Endpoints de Cupons
+
 - `GET /api/v1/coupons/` - Listar cupons disponíveis
 - `POST /api/v1/coupons/` - Criar cupom (apenas admin)
 - `GET /api/v1/coupons/{id}/` - Detalhes de um cupom
@@ -75,6 +80,7 @@ BLACKLIST_AFTER_ROTATION = True       # Blacklist de tokens antigos
 - `DELETE /api/v1/coupons/{id}/` - Deletar cupom (apenas admin)
 
 #### 🎁 Endpoints de Resgates
+
 - `GET /api/v1/coupons/redemptions/` - Listar resgates do usuário
 - `POST /api/v1/coupons/redemptions/` - Resgatar cupom
 - `GET /api/v1/coupons/redemptions/{id}/` - Detalhes de um resgate
@@ -84,7 +90,7 @@ BLACKLIST_AFTER_ROTATION = True       # Blacklist de tokens antigos
 #### ⚡ Regras de Negócio
 
 1. **Criação de Cupons**: Apenas administradores podem criar cupons
-2. **Limite de Resgates**: 
+2. **Limite de Resgates**:
    - Se `max_redemptions` for `null`: cupom de uso único por usuário
    - Se `max_redemptions` for um número: limite específico por usuário
 3. **Disponibilidade**: Cupons podem ser ativados/desativados
@@ -101,25 +107,29 @@ BLACKLIST_AFTER_ROTATION = True       # Blacklist de tokens antigos
 ### 🐳 Execução com Docker (Recomendado)
 
 1. **Clone o repositório**
+
 ```bash
 git clone <repository-url> challenge-backend
 cd challenge-backend
 ```
 
 2. **Execute com Docker Compose**
+
 ```bash
 # Subir os serviços
-docker-compose up 
+docker-compose up
 
 # OU usando Makefile
 make up
 ```
 
 3. **Acesse a aplicação**
-- **API**: http://localhost
-- **Documentação**: http://localhost/api/v1/docs
+
+- **API**: <http://localhost>
+- **Documentação**: <http://localhost/api/v1/docs>
 
 4. **Auto criação de dados**
+
 - O arquivo `infra/scripts/run.sh (Entrypoint do projeto)` já cria diversos usuários e cupons para uso inicial. Todos os dados de criação são exibidos nos logs do container.
 
 ### 🏗️ Estrutura do Projeto
@@ -141,20 +151,12 @@ O projeto usa **PostgreSQL** como banco de dados principal. As principais tabela
 - `coupons_coupon` - Cupons disponíveis
 - `coupons_redemption` - Resgates realizados
 
-## 🧪 Testes
-
-Execute os testes com:
-
-```bash
-# Com Docker
-make test
-```
-
 ## 📚 Documentação da API
 
 A documentação completa da API está disponível em:
-- **Swagger UI**: http://localhost/api/v1/docs
-- **OpenAPI Schema**: http://localhost/api/v1/schema/
+
+- **Swagger UI**: <http://localhost/api/v1/docs>
+- **OpenAPI Schema**: <http://localhost/api/v1/schema>
 
 ## 📄 Licença
 
