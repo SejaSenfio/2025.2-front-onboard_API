@@ -70,7 +70,9 @@ down: ## Encerra o ambiente docker excluindo os containers
 restart:
 	@set -e ; \
 	$(call log_section, Reiniciando o ambiente Docker...) ; \
-	$(call dCompose, restart ) ; \
+	$(MAKE) down ; \
+	$(MAKE) up ; \
+	$(call log_success, #==========================> Ambiente Docker reiniciado com sucesso) ; \
 	$(MAKE) logs
 
 collect: ## Coleta os arquivos estáticos

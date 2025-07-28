@@ -18,10 +18,16 @@ class Command(BaseCommand):
             )
             return None
 
-        for _ in range(random.randint(10, 20)):
+        fuser = UserFactory(email="admin.rochedo@senfio.com", is_staff=True)
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"Usuário {fuser.email}, com senha: 'SenhaS3nf10' criado com sucesso! => ADMINISTRADOR!"
+            )
+        )
+        for _ in range(random.randint(15, 25)):
             user = UserFactory()
             self.stdout.write(
                 self.style.SUCCESS(
-                    f"Usuário {user.email}, com senha: 'SenhaS3nf10' criado com sucesso! { '=> ADMINISTRADOR!' if user.is_staff else '' }"
+                    f"Usuário {user.email}, com senha: 'SenhaS3nf10' criado com sucesso! {'=> ADMINISTRADOR!' if user.is_staff else ''}"
                 )
             )

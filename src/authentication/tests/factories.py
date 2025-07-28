@@ -24,4 +24,4 @@ class UserFactory(DjangoModelFactory):
     )
     works_since = timezone.now().date() - timedelta(days=365)
     password = factory.PostGenerationMethodCall("set_password", "SenhaS3nf10")
-    is_staff = factory.Faker("boolean", chance_of_getting_true=25)
+    is_staff = factory.Faker("boolean", chance_of_getting_true=40)
