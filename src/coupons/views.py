@@ -141,7 +141,7 @@ class RedemptionListCreateView(generics.ListCreateAPIView):
         title="Remover Resgate",
         desc="Remove um resgate específico.",
         responses={204: GenericResponseSerializer},
-    )
+    ),
 )
 class RedemptionDetailView(generics.RetrieveDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -149,7 +149,6 @@ class RedemptionDetailView(generics.RetrieveDestroyAPIView):
 
     def get_queryset(self) -> BaseManager[Redemption]:
         return Redemption.objects.filter(user=self.request.user).select_related("coupon")
-
 
 
 @extend_schema_view(

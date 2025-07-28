@@ -10,13 +10,12 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    team = serializers.CharField(source='team_display', read_only=True)
-    
+    team = serializers.CharField(source="team_display", read_only=True)
+
     class Meta:
         model = User
         fields = ["id", "email", "team", "works_since", "is_active", "is_staff"]
         read_only_fields = ["id", "is_active", "is_staff"]
-
 
 
 class RegisterSerializer(serializers.ModelSerializer):

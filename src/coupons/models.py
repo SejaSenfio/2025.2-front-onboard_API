@@ -10,7 +10,9 @@ from shared.models import BaseModel
 class Coupon(BaseModel):
     code = models.CharField(max_length=50, unique=True, verbose_name="Código de resgate")
     description = models.TextField(verbose_name="Descrição")
-    max_redemptions = models.PositiveIntegerField(null=True, blank=True, verbose_name="Número máximo de resgates")
+    max_redemptions = models.PositiveIntegerField(
+        null=True, blank=True, verbose_name="Número máximo de resgates"
+    )
     available = models.BooleanField(default=True, verbose_name="Disponível")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
 
@@ -32,8 +34,12 @@ class Coupon(BaseModel):
 
 
 class Redemption(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="redemptions", verbose_name="Usuário")
-    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, related_name="redemptions", verbose_name="Cupom")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="redemptions", verbose_name="Usuário"
+    )
+    coupon = models.ForeignKey(
+        Coupon, on_delete=models.CASCADE, related_name="redemptions", verbose_name="Cupom"
+    )
     redeemed_at = models.DateTimeField(auto_now_add=True, verbose_name="Resgatado em")
 
     def clean(self) -> None:

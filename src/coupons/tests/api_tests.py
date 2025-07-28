@@ -8,7 +8,7 @@ from coupons.tests.factories import CouponFactory, RedemptionFactory, UserFactor
 @pytest.mark.django_db
 def test_balance_endpoint_usage_limited_coupon():
     user = UserFactory()
-    coupon = CouponFactory(max_redemptions=3)
+    coupon = CouponFactory(max_redemptions=3, available=True)
     RedemptionFactory.create_batch(1, user=user, coupon=coupon)
 
     client = APIClient()
@@ -24,7 +24,7 @@ def test_balance_endpoint_usage_limited_coupon():
 @pytest.mark.django_db
 def test_balance_endpoint_usage_unique_coupon():
     user = UserFactory()
-    coupon = CouponFactory(max_redemptions=None)
+    coupon = CouponFactory(max_redemptions=None, available=True)
     RedemptionFactory.create(user=user, coupon=coupon)
 
     client = APIClient()
@@ -36,10 +36,11 @@ def test_balance_endpoint_usage_unique_coupon():
         if c["coupon"]["code"] == coupon.code:
             assert c["remaining"] == 0
 
+
 @pytest.mark.django_db
 def test_coupon_list_authenticated():
     user = UserFactory()
-    CouponFactory.create_batch(3)
+    CouponFactory.create_batch(3, available=True)
 
     client = APIClient()
     client.force_authenticate(user=user)
@@ -86,7 +87,7 @@ def test_coupon_create_by_admin_success():
 @pytest.mark.django_db
 def test_coupon_detail_update_and_delete():
     admin = UserFactory(is_staff=True)
-    coupon = CouponFactory()
+    coupon = CouponFactory(available=True)
 
     client = APIClient()
     client.force_authenticate(user=admin)
@@ -106,7 +107,7 @@ def test_coupon_detail_update_and_delete():
 @pytest.mark.django_db
 def test_redemption_list_and_create_flow():
     user = UserFactory()
-    coupon = CouponFactory(max_redemptions=3)
+    coupon = CouponFactory(max_redemptions=3, available=True)
     RedemptionFactory(user=user, coupon=coupon)
 
     client = APIClient()

@@ -8,7 +8,7 @@ from coupons.tests.factories import CouponFactory, RedemptionFactory, UserFactor
 @pytest.mark.django_db
 def test_limite_resgates():
     user = UserFactory()
-    coupon = CouponFactory(max_redemptions=2)
+    coupon = CouponFactory(max_redemptions=2, available=True)
     RedemptionFactory.create_batch(2, user=user, coupon=coupon)
 
     redemption = Redemption(user=user, coupon=coupon)

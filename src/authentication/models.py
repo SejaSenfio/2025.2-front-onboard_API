@@ -41,7 +41,10 @@ class UserTeamChoice(models.TextChoices):
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
     email = models.EmailField(unique=True)
     team = models.CharField(
-        max_length=100, choices=UserTeamChoice.choices, default=UserTeamChoice.TECNOLOGIA,verbose_name="Equipe"
+        max_length=100,
+        choices=UserTeamChoice.choices,
+        default=UserTeamChoice.TECNOLOGIA,
+        verbose_name="Equipe",
     )
     works_since = models.DateField(verbose_name="Data de entrada na empresa")
     is_active = models.BooleanField(default=True, verbose_name="Ativo")

@@ -90,7 +90,7 @@ class CouponFactory(DjangoModelFactory):
             try:
                 instance = super()._create(model_class, *args, **kwargs)
                 return instance
-            except IntegrityError as e:
+            except IntegrityError:
                 if attempt == max_attempts - 1:
                     raise
                 # Gera um novo código aleatório
@@ -104,4 +104,4 @@ class RedemptionFactory(DjangoModelFactory):
         model = Redemption
 
     user = factory.SubFactory(UserFactory)
-    coupon = factory.SubFactory(CouponFactory)
+    coupon = factory.SubFactory(CouponFactory, available=True)

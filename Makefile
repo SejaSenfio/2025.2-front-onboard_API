@@ -114,13 +114,10 @@ _test:
 
 
 test :
-	@$(MAKE) _test PYTEST_ARGS='-m "not slow" -n auto'
+	@$(MAKE) _test PYTEST_ARGS='--cov=src -n auto'
 
 test_smoke:
 	@$(MAKE) _test PYTEST_ARGS='-m "smoke" -n auto'
-
-test_all :
-	@$(MAKE) _test PYTEST_ARGS='--cov=src -n auto'
 
 test_cov cov :
 	@$(MAKE) _test PYTEST_ARGS='--cov=src --cov-report html -n auto'
@@ -182,7 +179,7 @@ push_checks:
 
 quality ci:
 	$(MAKE) code_qa && \
-	$(MAKE) test_all && \
+	$(MAKE) test && \
 	$(MAKE) check_test_coverage
 
 
