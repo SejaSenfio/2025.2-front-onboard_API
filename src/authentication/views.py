@@ -60,7 +60,8 @@ class LoginView(TokenObtainPairView):
     )
 )
 class RefreshTokenView(TokenRefreshView):
-    pass
+    permission_classes: tuple = ()
+    authentication_classes: tuple = ()
 
 
 @extend_schema_view(
