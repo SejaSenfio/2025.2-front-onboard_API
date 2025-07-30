@@ -25,7 +25,7 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
     ],
     "DEFAULT_FILTER_BACKENDS": [
-        "api.filters.FieldSearchFilter",
+        "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
@@ -63,24 +63,7 @@ SPECTACULAR_SETTINGS = {
     - `ordering`: Campo a ser ordenado. (prefixo '-' para ordem decrescente)
     - `search`: Campo a ser pesquisado. \n \
         Por padrão a pesquisa é feita com o operador "icontains" (case-insensitive e parcial). \n \
-        Para pesquisas mais complexas: \n \
-            -> Buscando num campo específico : `?search=field::value`.
-            -> Buscando em vários campos específicos : `?search=field1::value1;field2::value2`.
-            -> Buscando com operadores avançados: (&field__lookup=value) | (?search=field__lookup::value) \n \
-                Lookup         | Descrição
-                ---------------|--------------------------------
-                exact          | Busca um valor exato (case-sensitive).
-                iexact         | Busca exata, mas case-insensitive.
-                contains       | Verifica se contém um valor (case-sensitive).
-                icontains      | Verifica se contém um valor (case-insensitive).
-                startswith     | Começa com (case-sensitive).
-                istartswith    | Começa com (case-insensitive).
-                endswith       | Termina com (case-sensitive).
-                iendswith      | Termina com (case-insensitive).
-                gt             | Maior que. | .filter(age__gt=18)
-                gte            | Maior ou igual a.
-                lt             | Menor que.
-                lte            | Menor ou igual a.
+        Cada View pode definir seus próprios campos de pesquisa através do atributo `search_fields`.
     """,
     "VERSION": BACKEND_APP_VERSION,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",

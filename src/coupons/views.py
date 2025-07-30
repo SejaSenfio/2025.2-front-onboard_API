@@ -25,6 +25,7 @@ from .serializers import (
         tag="Coupons",
         title="Listar Cupons",
         desc="Lista todos os cupons disponíveis.",
+        search_fields=["code", "description"],
         responses={200: CouponSerializer(many=True)},
     ),
     post=ApiDoc(
@@ -40,6 +41,7 @@ class CouponListCreateView(generics.ListCreateAPIView):
     queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
     permission_classes = [permissions.IsAuthenticated]
+    search_fields = ["code", "description"]
 
     def perform_create(self, serializer: Any) -> None:
         if not self.request.user.is_staff:
@@ -101,6 +103,7 @@ class CouponDetailView(generics.RetrieveUpdateDestroyAPIView):
         tag="Redemptions",
         title="Listar Resgates",
         desc="Lista todos os resgates feitos pelo usuário autenticado.",
+        search_fields=["coupon__code", "coupon__description", "user__email", "user__team"],
         responses={200: RedemptionSerializer(many=True)},
     ),
     post=ApiDoc(
@@ -114,6 +117,7 @@ class CouponDetailView(generics.RetrieveUpdateDestroyAPIView):
 )
 class RedemptionListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
+    search_fields = ["coupon__code", "coupon__description", "user__email", "user__team"]
 
     def get_queryset(self) -> BaseManager[Redemption]:
         return Redemption.objects.filter(user=self.request.user).select_related("coupon")
