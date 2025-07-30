@@ -7,21 +7,8 @@ info:
     \ ser retornada.\n    - `page_size`: Quantidade de itens por página.\n    - `ordering`:\
     \ Campo a ser ordenado. (prefixo '-' para ordem decrescente)\n    - `search`:\
     \ Campo a ser pesquisado. \n         Por padrão a pesquisa é feita com o operador\
-    \ \"icontains\" (case-insensitive e parcial). \n         Para pesquisas mais complexas:\
-    \ \n             -> Buscando num campo específico : `?search=field::value`.\n\
-    \            -> Buscando em vários campos específicos : `?search=field1::value1;field2::value2`.\n\
-    \            -> Buscando com operadores avançados: (&field__lookup=value) | (?search=field__lookup::value)\
-    \ \n                 Lookup         | Descrição\n                ---------------|--------------------------------\n\
-    \                exact          | Busca um valor exato (case-sensitive).\n   \
-    \             iexact         | Busca exata, mas case-insensitive.\n          \
-    \      contains       | Verifica se contém um valor (case-sensitive).\n      \
-    \          icontains      | Verifica se contém um valor (case-insensitive).\n\
-    \                startswith     | Começa com (case-sensitive).\n             \
-    \   istartswith    | Começa com (case-insensitive).\n                endswith\
-    \       | Termina com (case-sensitive).\n                iendswith      | Termina\
-    \ com (case-insensitive).\n                gt             | Maior que. | .filter(age__gt=18)\n\
-    \                gte            | Maior ou igual a.\n                lt      \
-    \       | Menor que.\n                lte            | Menor ou igual a.\n    "
+    \ \"icontains\" (case-insensitive e parcial). \n         Cada View pode definir\
+    \ seus próprios campos de pesquisa através do atributo `search_fields`.\n    "
 paths:
   /api/v1/authentication/change-password:
     patch:
@@ -962,12 +949,12 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
-      - name: search
-        required: false
-        in: query
-        description: A search term.
+      - in: query
+        name: search
         schema:
           type: string
+          minLength: 1
+        description: 'Termo de busca para os campos: [ code, description ]'
       tags:
       - Coupons
       security:
@@ -1876,12 +1863,13 @@ paths:
         description: Number of results to return per page.
         schema:
           type: integer
-      - name: search
-        required: false
-        in: query
-        description: A search term.
+      - in: query
+        name: search
         schema:
           type: string
+          minLength: 1
+        description: 'Termo de busca para os campos: [ coupon__code, coupon__description,
+          user__email, user__team ]'
       tags:
       - Redemptions
       security:
